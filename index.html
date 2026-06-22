@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Absensi Matsanesa</title>
+    <title>E-Absensi Pro - Integrated Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/html5-qrcode"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -105,7 +105,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1-1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 17h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                 </svg>
             </div>
-            <span class="text-lg font-extrabold tracking-tight text-slate-800 uppercase">E-Absensi Matsanesa</span>
+            <span class="text-lg font-extrabold tracking-tight text-slate-800 uppercase">E-Absensi</span>
         </div>
 
         <nav class="flex items-center space-x-10">
@@ -260,12 +260,26 @@
                 </div>
 
                 <div id="view-database" class="hidden fade-in space-y-8">
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between flex-wrap gap-4">
                         <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Database Siswa</h2>
-                        <button onclick="openAddStudentModal()" class="flex items-center space-x-2 bg-indigo-600 text-white px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:shadow-lg transition-all shadow-indigo-100">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" /></svg>
-                            <span>Tambah Siswa</span>
-                        </button>
+                        <div class="flex items-center space-x-3">
+                            <!-- DOWNLOAD TEMPLATE -->
+                            <button onclick="downloadImportTemplate()" class="flex items-center space-x-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                                <span>Template</span>
+                            </button>
+                            <!-- IMPORT DATA SISWA -->
+                            <button onclick="triggerImportCSV()" class="flex items-center space-x-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                                <span>Import CSV</span>
+                            </button>
+                            <input type="file" id="csv-file-input" accept=".csv" class="hidden" onchange="importCSVData(event)">
+                            <!-- TAMBAH DATA SISWA MANUAL -->
+                            <button onclick="openAddStudentModal()" class="flex items-center space-x-2 bg-indigo-600 text-white px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:shadow-lg transition-all shadow-indigo-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" /></svg>
+                                <span>Tambah Siswa</span>
+                            </button>
+                        </div>
                     </div>
 
                     <!-- TAB KELAS (DENGAN ROMAWI) -->
@@ -345,7 +359,7 @@
         </div>
     </main>
 
-    <!-- STUDENT MODAL TAMBAH SISWA BARU -->
+    <!-- STUDENT MODAL -->
     <div id="modal-student" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[200] flex items-center justify-center p-6 hidden">
         <div class="bg-white p-10 rounded-[3rem] w-full max-w-md shadow-2xl scale-95 transition-all overflow-y-auto max-h-[90vh]">
             <h2 id="modal-student-title" class="text-2xl font-black text-slate-800 mb-2 tracking-tight text-center">Data Siswa</h2>
@@ -393,7 +407,7 @@
                 </div>
                 
                 <div class="pt-4 space-y-2">
-                    <button onclick="saveStudent()" class="w-full py-5 bg-indigo-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl hover:bg-indigo-700 transition-all">Simpan Data</button>
+                    <button onclick="saveStudent()" class="w-full py-4.5 bg-indigo-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl hover:bg-indigo-700 transition-all">Simpan Data</button>
                     <button onclick="toggleStudentModal()" class="w-full py-4 text-slate-400 font-bold text-[10px] uppercase">Batalkan</button>
                 </div>
             </div>
@@ -675,6 +689,96 @@
                 renderDatabaseTable();
                 updateStats();
             }
+        }
+
+        // --- SISTEM IMPORT CSV & TEMPLATE DATA SISWA ---
+        function triggerImportCSV() {
+            document.getElementById('csv-file-input').click();
+        }
+
+        function downloadImportTemplate() {
+            // Header kolom format template yang konsisten
+            let csvContent = "NISN,Nama,WA Ortu,Kelas,Sub Kelas\n";
+            // Contoh baris data untuk panduan pengguna
+            csvContent += "0098765432,Budi Santoso,628123456789,7,1\n";
+            csvContent += "0098765433,Siti Aminah,628123456790,8,2\n";
+            csvContent += "0098765434,Rahmat Hidayat,628123456791,9,3\n";
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", "template_import_siswa.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function importCSVData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const lines = text.split('\n');
+                if (lines.length <= 1) {
+                    alert("File CSV tidak valid atau kosong!");
+                    return;
+                }
+
+                let successCount = 0;
+                let skipCount = 0;
+
+                // Loop dari index 1 (lewati baris header)
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+
+                    const cols = line.split(',');
+                    if (cols.length < 5) {
+                        skipCount++;
+                        continue;
+                    }
+
+                    const nisn = cols[0].trim();
+                    const name = cols[1].trim();
+                    const phone = cols[2].trim();
+                    const kelas = parseInt(cols[3].trim());
+                    const subKelas = parseInt(cols[4].trim());
+
+                    // Validasi dasar
+                    if (!nisn || !name || !phone || isNaN(kelas) || isNaN(subKelas)) {
+                        skipCount++;
+                        continue;
+                    }
+
+                    // Cek apakah NISN sudah ada dalam list
+                    const existingIndex = students.findIndex(s => s.nisn === nisn);
+                    const studentData = { nisn, name, phone, kelas, subKelas };
+
+                    if (existingIndex > -1) {
+                        // Update data siswa jika NISN sama
+                        students[existingIndex] = studentData;
+                    } else {
+                        // Tambah data baru
+                        students.push(studentData);
+                    }
+                    successCount++;
+                }
+
+                localStorage.setItem('absensi_students', JSON.stringify(students));
+                renderDatabaseTable();
+                updateStats();
+
+                let message = `Berhasil mengimpor ${successCount} data siswa.`;
+                if (skipCount > 0) {
+                    message += ` (${skipCount} baris dilewati karena format tidak sesuai/error).`;
+                }
+                alert(message);
+                event.target.value = ''; // Reset input file
+            };
+            reader.readAsText(file);
         }
 
         function deleteLog(id) {
