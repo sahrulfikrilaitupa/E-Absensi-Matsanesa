@@ -6,7 +6,7 @@
     <title>E-Absensi Matsanesa</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/html5-qrcode"></script>
-    <link rel="icon" type="image/x-icon" href="matsanesa.png">
+    <link rel="icon" type="image/png" href="matsanesa.png">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
@@ -498,7 +498,7 @@
         async function initScanner() {
             if (html5Qr) return;
             html5Qr = new Html5Qrcode("reader");
-            const config = { fps: 15, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 };
+            const config = { fps: 15, qrbox: { width: 350, height: 350 }, aspectRatio: 1.0 };
             try {
                 await html5Qr.start({ facingMode: "environment" }, config, onScanSuccess);
             } catch (err) {
